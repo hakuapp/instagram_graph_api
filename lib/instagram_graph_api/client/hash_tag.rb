@@ -5,13 +5,14 @@ module InstagramGraphApi
       MEDIA_DEFAULT_FIELDS = "id,caption,comments_count,like_count,media_type,media_url,children{media_url}"
 
       def get_tag_id(name)
-        begin
-          accounts = ig_business_accounts
-          user_id  = accounts.first['id'] if accounts.any?
-          graph_call("ig_hashtag_search?user_id=#{user_id}&q=#{name}").first
-        rescue Exception => e
-          return nil
-        end
+        accounts = ig_business_accounts
+        user_id  = accounts.first['id'] if accounts.any?
+        uri = "ig_hashtag_search?user_id=#{user_id}&q=#{name}"
+        puts "graph call get tags: #{uri}"
+        graph_call(uri).first
+      rescue Exception => e
+        puts e.message
+        return nil
       end
 
       def recent_tag_media(tag_id, fields = nil)
